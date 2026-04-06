@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🍞 Dinesh Bakery</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  /* ===== RESET & VARIABLES ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream:     #FDF6EC;
+    --warm-white:#FFFAF3;
+    --gold:      #C8922A;
+    --gold-lt:   #E8B84B;
+    --brown:     #3E1F00;
+    --brown-md:  #6B3A1F;
+    --brown-lt:  #9C6644;
+    --rose:      #D4756B;
+    --rose-lt:   #F2A99F;
+    --sage:      #7A9E7E;
+    --shadow:    rgba(62,31,0,.15);
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'DM Sans', sans-serif;
+    --radius:    14px;
+    --transition: .25s cubic-bezier(.4,0,.2,1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--cream);
+    color: var(--brown);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== PAGES ===== */
+  .page { display: none; min-height: 100vh; animation: fadeIn .35s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ===== NAV ===== */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--brown);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: 62px;
+    box-shadow: 0 3px 16px var(--shadow);
+  }
+  .nav-brand {
+    font-family: var(--font-display);
+    font-size: 1.5rem; color: var(--gold-lt);
+    display: flex; align-items: center; gap: 8px; cursor: pointer;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; align-items: center; gap: 6px; }
+  .nav-links button {
+    background: transparent; border: none;
+    color: var(--cream); font-family: var(--font-body);
+    font-size: .88rem; font-weight: 500;
+    padding: 8px 14px; border-radius: 8px;
+    cursor: pointer; transition: background var(--transition);
+  }
+  .nav-links button:hover, .nav-links button.active { background: rgba(255,255,255,.12); }
+  .nav-links .cart-btn {
+    background: var(--gold); color: var(--brown);
+    font-weight: 600; border-radius: 20px; padding: 7px 16px;
+  }
+  .nav-links .cart-btn:hover { background: var(--gold-lt); }
+  .cart-count {
+    background: var(--rose); color: #fff;
+    border-radius: 50%; width: 18px; height: 18px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .7rem; font-weight: 700; margin-left: 4px;
+  }
+  .hamburger {
+    display: none; background: none; border: none;
+    color: var(--cream); font-size: 1.5rem; cursor: pointer;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, var(--brown) 0%, var(--brown-md) 60%, var(--brown-lt) 100%);
+    min-height: 440px;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 60px 20px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C8922A' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: .6;
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    color: var(--gold-lt);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    color: rgba(255,255,255,.75);
+    font-size: 1.05rem;
+    max-width: 440px;
+    margin: 0 auto 28px;
+  }
+  .btn-primary {
+    display: inline-block;
+    background: var(--gold); color: var(--brown);
+    font-family: var(--font-body); font-weight: 700;
+    font-size: .95rem; padding: 13px 32px;
+    border-radius: 30px; border: none;
+    cursor: pointer; text-decoration: none;
+    transition: all var(--transition);
+    box-shadow: 0 4px 18px rgba(200,146,42,.4);
+  }
+  .btn-primary:hover { background: var(--gold-lt); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,146,42,.5); }
+
+  /* ===== SECTION ===== */
+  .section { padding: 56px 20px; max-width: 1100px; margin: 0 auto; }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    color: var(--brown);
+    margin-bottom: 8px;
+  }
+  .section-sub { color: var(--brown-lt); margin-bottom: 36px; font-size: .95rem; }
+
+  /* ===== CATEGORY FILTER ===== */
+  .cat-filter { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+  .cat-btn {
+    background: var(--warm-white); border: 1.5px solid #ddd;
+    color: var(--brown-md); font-family: var(--font-body);
+    font-size: .85rem; font-weight: 500;
+    padding: 7px 18px; border-radius: 20px;
+    cursor: pointer; transition: all var(--transition);
+  }
+  .cat-btn.active, .cat-btn:hover {
+    background: var(--brown); color: var(--gold-lt);
+    border-color: var(--brown);
+  }
+
+  /* ===== MENU GRID ===== */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 22px;
+  }
+  .menu-card {
+    background: var(--warm-white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 2px 12px var(--shadow);
+    transition: transform var(--transition), box-shadow var(--transition);
+    display: flex; flex-direction: column;
+  }
+  .menu-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px var(--shadow); }
+  .card-img {
+    height: 140px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem;
+    background: linear-gradient(135deg, #f5e6cf, #ffe4b5);
+  }
+  .card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
+  .card-category {
+    font-size: .7rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .06em;
+    color: var(--brown-lt); margin-bottom: 4px;
+  }
+  .card-name {
+    font-family: var(--font-display);
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--brown); margin-bottom: 4px;
+  }
+  .card-price {
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--gold); margin-top: auto;
+    padding-top: 10px;
+  }
+  .add-btn {
+    margin-top: 10px; width: 100%;
+    background: var(--brown); color: var(--gold-lt);
+    border: none; border-radius: 8px;
+    font-family: var(--font-body); font-weight: 600;
+    font-size: .88rem; padding: 10px;
+    cursor: pointer; transition: background var(--transition);
+  }
+  .add-btn:hover { background: var(--brown-md); }
+
+  /* ===== CART ===== */
+  .cart-container { display: grid; grid-template-columns: 1fr 320px; gap: 28px; align-items: start; }
+  @media(max-width:768px) { .cart-container { grid-template-columns: 1fr; } }
+
+  .cart-table { width: 100%; border-collapse: collapse; }
+  .cart-table th {
+    background: var(--brown); color: var(--gold-lt);
+    font-family: var(--font-display); font-weight: 700;
+    padding: 12px 16px; text-align: left; font-size: .9rem;
+  }
+  .cart-table th:first-child { border-radius: 10px 0 0 0; }
+  .cart-table th:last-child { border-radius: 0 10px 0 0; }
+  .cart-table td { padding: 12px 16px; border-bottom: 1px solid #ecdfd0; font-size: .92rem; }
+  .cart-table tr:hover td { background: #fdf1e0; }
+  .qty-control { display: flex; align-items: center; gap: 8px; }
+  .qty-btn {
+    width: 28px; height: 28px;
+    background: var(--brown); color: var(--gold-lt);
+    border: none; border-radius: 6px; cursor: pointer;
+    font-size: 1rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    transition: background var(--transition);
+  }
+  .qty-btn:hover { background: var(--gold); color: var(--brown); }
+  .qty-val { font-weight: 600; min-width: 24px; text-align: center; }
+  .remove-btn {
+    background: none; border: none;
+    color: var(--rose); font-size: 1.1rem; cursor: pointer;
+    padding: 4px; border-radius: 4px;
+    transition: background var(--transition);
+  }
+  .remove-btn:hover { background: #fde8e6; }
+
+  /* Order Summary Card */
+  .summary-card {
+    background: var(--warm-white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 2px 12px var(--shadow);
+    position: sticky; top: 80px;
+  }
+  .summary-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.3rem; margin-bottom: 18px;
+    color: var(--brown);
+  }
+  .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: .92rem; }
+  .summary-row.total {
+    border-top: 2px solid #ecdfd0;
+    padding-top: 12px; margin-top: 6px;
+    font-weight: 700; font-size: 1.05rem; color: var(--brown);
+  }
+  .empty-cart {
+    text-align: center; padding: 60px 20px;
+    color: var(--brown-lt);
+  }
+  .empty-cart .icon { font-size: 4rem; margin-bottom: 16px; }
+
+  /* ===== CHECKOUT FORM ===== */
+  .checkout-grid { display: grid; grid-template-columns: 1fr 360px; gap: 32px; align-items: start; }
+  @media(max-width:768px) { .checkout-grid { grid-template-columns: 1fr; } }
+
+  .form-card {
+    background: var(--warm-white);
+    border-radius: var(--radius); padding: 28px;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  .form-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.4rem; margin-bottom: 22px;
+    color: var(--brown);
+  }
+  .form-group { margin-bottom: 18px; }
+  .form-group label {
+    display: block; font-weight: 600;
+    font-size: .85rem; margin-bottom: 6px;
+    color: var(--brown-md);
+  }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid #ddd; border-radius: 8px;
+    font-family: var(--font-body); font-size: .92rem;
+    color: var(--brown); background: #fff;
+    transition: border-color var(--transition);
+    resize: vertical;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    outline: none; border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(200,146,42,.12);
+  }
+
+  /* ===== BILL PAGE ===== */
+  .bill-wrapper { max-width: 600px; margin: 40px auto; padding: 0 20px 60px; }
+  .bill-card {
+    background: #fff;
+    border: 1.5px solid #e8d9c0;
+    border-radius: var(--radius);
+    padding: 40px;
+    box-shadow: 0 4px 28px var(--shadow);
+  }
+  .bill-header { text-align: center; margin-bottom: 28px; }
+  .bill-header .bill-logo { font-size: 2.2rem; }
+  .bill-header h2 {
+    font-family: var(--font-display);
+    font-size: 2rem; color: var(--brown);
+  }
+  .bill-header p { color: var(--brown-lt); font-size: .88rem; }
+  .bill-meta { background: #fdf1e0; border-radius: 8px; padding: 12px 16px; margin-bottom: 22px; font-size: .85rem; }
+  .bill-meta div { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .bill-meta div:last-child { margin-bottom: 0; }
+  .bill-items-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+  .bill-items-table th {
+    background: var(--brown); color: var(--gold-lt);
+    padding: 9px 12px; text-align: left; font-size: .82rem;
+  }
+  .bill-items-table td { padding: 9px 12px; border-bottom: 1px solid #ecdfd0; font-size: .88rem; }
+  .bill-total-row {
+    background: var(--brown); color: var(--gold-lt);
+    text-align: right; padding: 14px 16px;
+    font-family: var(--font-display); font-size: 1.15rem;
+    border-radius: 0 0 8px 8px;
+  }
+  .bill-footer { text-align: center; margin-top: 24px; color: var(--brown-lt); font-size: .82rem; }
+  .bill-actions { display: flex; gap: 12px; margin-top: 24px; }
+  .btn-whatsapp {
+    flex: 1; background: #25D366; color: #fff;
+    border: none; border-radius: 8px; padding: 13px;
+    font-family: var(--font-body); font-weight: 700;
+    font-size: .9rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background var(--transition);
+  }
+  .btn-whatsapp:hover { background: #1da851; }
+  .btn-download {
+    flex: 1; background: var(--brown); color: var(--gold-lt);
+    border: none; border-radius: 8px; padding: 13px;
+    font-family: var(--font-body); font-weight: 700;
+    font-size: .9rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background var(--transition);
+  }
+  .btn-download:hover { background: var(--brown-md); }
+
+  /* ===== ADMIN ===== */
+  .admin-layout { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+  @media(max-width:768px) { .admin-layout { grid-template-columns: 1fr; } }
+  .admin-sidebar {
+    background: var(--brown);
+    padding: 24px 0;
+    position: sticky; top: 0;
+    height: 100vh;
+  }
+  .admin-sidebar .sidebar-brand {
+    font-family: var(--font-display);
+    color: var(--gold-lt); font-size: 1.1rem;
+    padding: 0 20px 24px;
+    border-bottom: 1px solid rgba(255,255,255,.1);
+    margin-bottom: 16px;
+  }
+  .sidebar-nav button {
+    display: block; width: 100%;
+    background: none; border: none;
+    color: rgba(255,255,255,.7);
+    font-family: var(--font-body); font-size: .9rem;
+    text-align: left; padding: 11px 20px;
+    cursor: pointer; transition: all var(--transition);
+    border-left: 3px solid transparent;
+  }
+  .sidebar-nav button:hover, .sidebar-nav button.active {
+    background: rgba(255,255,255,.08);
+    color: var(--gold-lt);
+    border-left-color: var(--gold);
+  }
+  .admin-main { padding: 32px 28px; background: var(--cream); overflow-y: auto; }
+  .admin-section { display: none; }
+  .admin-section.active { display: block; }
+
+  /* Stats */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-card {
+    background: var(--warm-white);
+    border-radius: var(--radius); padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px var(--shadow);
+  }
+  .stat-card .stat-icon { font-size: 2rem; margin-bottom: 8px; }
+  .stat-card .stat-val { font-family: var(--font-display); font-size: 1.8rem; color: var(--brown); font-weight: 700; }
+  .stat-card .stat-label { font-size: .78rem; color: var(--brown-lt); margin-top: 4px; }
+
+  /* Admin Table */
+  .admin-table-wrap { overflow-x: auto; border-radius: var(--radius); box-shadow: 0 2px 10px var(--shadow); }
+  .admin-table { width: 100%; border-collapse: collapse; background: var(--warm-white); }
+  .admin-table th {
+    background: var(--brown); color: var(--gold-lt);
+    padding: 12px 16px; text-align: left; font-size: .85rem;
+    font-family: var(--font-display);
+  }
+  .admin-table td { padding: 11px 16px; border-bottom: 1px solid #ecdfd0; font-size: .88rem; vertical-align: middle; }
+  .admin-table tr:last-child td { border-bottom: none; }
+  .admin-table tr:hover td { background: #fdf5e8; }
+
+  /* Admin Form */
+  .admin-form-card {
+    background: var(--warm-white);
+    border-radius: var(--radius); padding: 24px;
+    box-shadow: 0 2px 10px var(--shadow);
+    margin-bottom: 24px;
+  }
+  .admin-form-card h3 { font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 18px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end; }
+  @media(max-width:600px) { .form-row { grid-template-columns: 1fr; } }
+
+  /* Buttons */
+  .btn-edit {
+    background: var(--sage); color: #fff;
+    border: none; border-radius: 6px; padding: 6px 12px;
+    font-size: .8rem; font-weight: 600; cursor: pointer;
+    margin-right: 6px; transition: background var(--transition);
+  }
+  .btn-edit:hover { background: #5c7f60; }
+  .btn-del {
+    background: var(--rose); color: #fff;
+    border: none; border-radius: 6px; padding: 6px 12px;
+    font-size: .8rem; font-weight: 600; cursor: pointer;
+    transition: background var(--transition);
+  }
+  .btn-del:hover { background: #b85c53; }
+  .btn-secondary {
+    background: transparent; border: 2px solid var(--brown);
+    color: var(--brown); border-radius: 8px; padding: 10px 22px;
+    font-family: var(--font-body); font-weight: 600; font-size: .9rem;
+    cursor: pointer; transition: all var(--transition);
+  }
+  .btn-secondary:hover { background: var(--brown); color: var(--cream); }
+
+  /* Badge */
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 12px;
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+  }
+  .badge-cake { background: #fde8e6; color: #b85c53; }
+  .badge-bread { background: #e8f5e9; color: #2e7d32; }
+  .badge-pastry { background: #fff3e0; color: #e65100; }
+  .badge-cookie { background: #e3f2fd; color: #1565c0; }
+  .badge-other { background: #f3e5f5; color: #6a1b9a; }
+
+  /* ===== LOGIN ===== */
+  .login-page {
+    min-height: 100vh; background: var(--brown);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .login-card {
+    background: var(--warm-white);
+    border-radius: 20px; padding: 48px 40px;
+    width: 100%; max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+    text-align: center;
+  }
+  .login-card .login-icon { font-size: 3.5rem; margin-bottom: 16px; }
+  .login-card h2 {
+    font-family: var(--font-display);
+    font-size: 1.9rem; color: var(--brown); margin-bottom: 6px;
+  }
+  .login-card p { color: var(--brown-lt); font-size: .88rem; margin-bottom: 30px; }
+  .login-err {
+    background: #fde8e6; color: #b85c53;
+    border-radius: 8px; padding: 10px 14px;
+    font-size: .85rem; margin-bottom: 16px; display: none;
+  }
+
+  /* ===== TOAST ===== */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    background: var(--brown); color: var(--cream);
+    padding: 12px 22px; border-radius: 10px;
+    font-size: .88rem; font-weight: 500;
+    transform: translateY(80px); opacity: 0;
+    transition: all .35s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 6px 24px rgba(0,0,0,.25);
+    pointer-events: none;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(0,0,0,.5);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--warm-white);
+    border-radius: var(--radius); padding: 32px;
+    max-width: 440px; width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  }
+  .modal h3 { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 20px; }
+  .modal-btns { display: flex; gap: 12px; margin-top: 22px; justify-content: flex-end; }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body * { visibility: hidden; }
+    .bill-card, .bill-card * { visibility: visible; }
+    .bill-card { position: fixed; top: 0; left: 0; width: 100%; box-shadow: none; border: none; }
+    .bill-actions { display: none; }
+    .no-print { display: none; }
+    nav { display: none; }
+  }
+
+  /* ===== UTILITY ===== */
+  .text-center { text-align: center; }
+  .mt-4 { margin-top: 16px; }
+  .mt-8 { margin-top: 32px; }
+  .d-flex { display: flex; }
+  .gap-2 { gap: 8px; }
+  .justify-between { justify-content: space-between; }
+  .align-center { align-items: center; }
+  .w-full { width: 100%; }
+  hr.divider { border: none; border-top: 1.5px solid #ecdfd0; margin: 20px 0; }
+
+  /* Responsive Nav */
+  @media(max-width:640px) {
+    .hamburger { display: block; }
+    .nav-links {
+      display: none; flex-direction: column;
+      position: absolute; top: 62px; left: 0; right: 0;
+      background: var(--brown); padding: 12px;
+      box-shadow: 0 6px 20px var(--shadow);
+    }
+    .nav-links.open { display: flex; }
+    .nav-links button { width: 100%; }
+  }
+
+  /* Order item in checkout summary */
+  .order-item-row { display: flex; justify-content: space-between; font-size: .88rem; margin-bottom: 7px; }
+  .page-header { margin-bottom: 28px; }
+  .page-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 4vw, 2.3rem);
+    color: var(--brown);
+  }
+  .page-header p { color: var(--brown-lt); margin-top: 4px; }
+
+  /* Features section on home */
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 20px; margin-top: 32px; }
+  .feature-card {
+    background: var(--warm-white); border-radius: var(--radius);
+    padding: 24px; text-align: center;
+    box-shadow: 0 2px 10px var(--shadow);
+    transition: transform var(--transition);
+  }
+  .feature-card:hover { transform: translateY(-3px); }
+  .feature-card .feat-icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .feature-card h4 { font-family: var(--font-display); font-size: 1.05rem; color: var(--brown); margin-bottom: 6px; }
+  .feature-card p { font-size: .82rem; color: var(--brown-lt); line-height: 1.5; }
+
+  .admin-header { margin-bottom: 24px; }
+  .admin-header h2 { font-family: var(--font-display); font-size: 1.8rem; color: var(--brown); }
+  .admin-header p { color: var(--brown-lt); font-size: .9rem; }
+
+  .order-detail-popup {
+    font-size: .85rem; max-height: 240px; overflow-y: auto;
+    background: #fdf5e8; border-radius: 8px; padding: 10px;
+    margin-top: 8px;
+  }
+  .no-items { text-align: center; padding: 40px; color: var(--brown-lt); }
+  .no-items .ni-icon { font-size: 3rem; margin-bottom: 12px; }
+
+  /* Wavy divider */
+  .wavy {
+    height: 48px; background: var(--cream);
+    clip-path: ellipse(55% 100% at 50% 100%);
+    margin-top: -2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- EDIT ITEM MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3>✏️ Edit Item</h3>
+    <div class="form-group"><label>Item Name</label><input type="text" id="editName" placeholder="e.g. Chocolate Cake"/></div>
+    <div class="form-group"><label>Price (₹)</label><input type="number" id="editPrice" placeholder="e.g. 350"/></div>
+    <div class="form-group"><label>Category</label>
+      <select id="editCategory">
+        <option>Cake</option><option>Bread</option>
+        <option>Pastry</option><option>Cookie</option><option>Other</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- NAVIGATION (hidden on login/admin pages) -->
+<!-- ============================================================ -->
+<nav id="mainNav">
+  <a class="nav-brand" onclick="showPage('home')">🍞 Dinesh Bakery</a>
+  <button class="hamburger" onclick="toggleHamburger()">☰</button>
+  <div class="nav-links" id="navLinks">
+    <button onclick="showPage('home');closeNav()">🏠 Home</button>
+    <button onclick="showPage('menu');closeNav()">🍰 Menu</button>
+    <button onclick="showPage('cart');closeNav()" class="cart-btn">🛒 Cart <span class="cart-count" id="cartCount">0</span></button>
+  </div>
+</nav>
+
+<!-- ============================================================ -->
+<!-- PAGE: HOME -->
+<!-- ============================================================ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-content">
+      <div style="font-size:3rem;margin-bottom:12px;">🎂</div>
+      <h1>Freshly Baked<br/>With Love</h1>
+      <p>Artisan breads, dreamy cakes, flaky pastries — crafted fresh every morning.</p>
+      <button class="btn-primary" onclick="showPage('menu')">Browse Our Menu →</button>
+    </div>
+  </div>
+  <div class="wavy"></div>
+  <div class="section">
+    <h2 class="section-title" style="text-align:center;">Why Choose Us?</h2>
+    <p class="section-sub" style="text-align:center;">Everything we make comes from our heart</p>
+    <div class="features-grid">
+      <div class="feature-card"><div class="feat-icon">🌾</div><h4>Fresh Ingredients</h4><p>Only the finest locally sourced flour, eggs, and butter.</p></div>
+      <div class="feature-card"><div class="feat-icon">👨‍🍳</div><h4>Master Bakers</h4><p>Decades of experience baked into every single item.</p></div>
+      <div class="feature-card"><div class="feat-icon">🚀</div><h4>Quick Delivery</h4><p>Order now and get your goodies delivered fresh to your door.</p></div>
+      <div class="feature-card"><div class="feat-icon">💝</div><h4>Made with Love</h4><p>Every item is crafted with care and attention to detail.</p></div>
+    </div>
+    <div style="text-align:center;margin-top:40px;">
+      <button class="btn-primary" onclick="showPage('menu')">Order Now 🛒</button>
+      &nbsp;&nbsp;
+      <button class="btn-secondary" onclick="showPage('admin-login')">Admin Login 🔐</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: MENU -->
+<!-- ============================================================ -->
+<div class="page" id="page-menu">
+  <div class="section">
+    <div class="page-header">
+      <h2>Our Menu</h2>
+      <p>Pick your favourites and add them to cart</p>
+    </div>
+    <div class="cat-filter" id="menuCatFilter"></div>
+    <div class="menu-grid" id="menuGrid"></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: CART -->
+<!-- ============================================================ -->
+<div class="page" id="page-cart">
+  <div class="section">
+    <div class="page-header">
+      <h2>Your Cart</h2>
+      <p>Review your items before checking out</p>
+    </div>
+    <div id="cartContent"></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: CHECKOUT -->
+<!-- ============================================================ -->
+<div class="page" id="page-checkout">
+  <div class="section">
+    <div class="page-header">
+      <h2>Checkout</h2>
+      <p>Fill in your details to place the order</p>
+    </div>
+    <div class="checkout-grid">
+      <div class="form-card">
+        <h3>📋 Delivery Details</h3>
+        <div class="form-group"><label>Full Name *</label><input type="text" id="custName" placeholder="Your name"/></div>
+        <div class="form-group"><label>Phone Number *</label><input type="tel" id="custPhone" placeholder="10-digit mobile number"/></div>
+        <div class="form-group"><label>Delivery Address *</label><textarea id="custAddress" rows="3" placeholder="House no, street, area, city..."></textarea></div>
+        <div class="form-group"><label>Special Instructions</label><textarea id="custNote" rows="2" placeholder="Any special requests?"></textarea></div>
+        <button class="btn-primary w-full" style="margin-top:8px;" onclick="placeOrder()">Place Order 🎉</button>
+      </div>
+      <div>
+        <div class="summary-card">
+          <h3>Order Summary</h3>
+          <div id="checkoutSummary"></div>
+          <hr class="divider"/>
+          <div class="summary-row total"><span>Total</span><span id="checkoutTotal">₹0</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: BILL -->
+<!-- ============================================================ -->
+<div class="page" id="page-bill">
+  <div class="bill-wrapper">
+    <div class="bill-card" id="billCard">
+      <div class="bill-header">
+        <div class="bill-logo">🍞</div>
+        <h2>Dinesh Bakery</h2>
+        <p>Fresh Baked Goods | Chennai</p>
+        <p>📞 +91 93459 97475</p>
+      </div>
+      <hr class="divider"/>
+      <div class="bill-meta" id="billMeta"></div>
+      <table class="bill-items-table">
+        <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
+        <tbody id="billItems"></tbody>
+      </table>
+      <div class="bill-total-row" id="billTotal"></div>
+      <div class="bill-footer">
+        <p>Thank you for your order! 💛</p>
+        <p style="margin-top:4px;">Please send payment via WhatsApp or UPI.</p>
+      </div>
+    </div>
+    <div class="bill-actions" id="billActions">
+      <button class="btn-whatsapp" onclick="sendWhatsApp()">📲 WhatsApp Order</button>
+      <button class="btn-download" onclick="window.print()">🖨️ Print / Save PDF</button>
+    </div>
+    <div style="text-align:center;margin-top:16px;">
+      <button class="btn-secondary" onclick="newOrder()">🛍️ Place Another Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: ADMIN LOGIN -->
+<!-- ============================================================ -->
+<div class="page" id="page-admin-login">
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-icon">🔐</div>
+      <h2>Admin Login</h2>
+      <p>Bakery management portal</p>
+      <div class="login-err" id="loginErr">Invalid username or password.</div>
+      <div class="form-group" style="text-align:left;">
+        <label>Username</label>
+        <input type="text" id="loginUser" placeholder="Enter username" onkeydown="if(event.key==='Enter')doLogin()"/>
+      </div>
+      <div class="form-group" style="text-align:left;">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/>
+      </div>
+      <button class="btn-primary w-full" onclick="doLogin()">Login →</button>
+      <div style="margin-top:16px;">
+        <button class="btn-secondary w-full" onclick="showPage('home')">← Back to Store</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: ADMIN DASHBOARD -->
+<!-- ============================================================ -->
+<div class="page" id="page-admin">
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-brand">🍞 Admin Panel</div>
+      <nav class="sidebar-nav">
+        <button class="active" onclick="adminTab('dash',this)">📊 Dashboard</button>
+        <button onclick="adminTab('menu',this)">🍰 Menu Items</button>
+        <button onclick="adminTab('orders',this)">📦 Orders</button>
+        <button onclick="adminLogout()">🚪 Logout</button>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+
+      <!-- Dashboard Section -->
+      <div class="admin-section active" id="admin-dash">
+        <div class="admin-header">
+          <h2>Dashboard</h2>
+          <p>Welcome back, Dinesh 👋</p>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-icon">🍰</div><div class="stat-val" id="statItems">0</div><div class="stat-label">Menu Items</div></div>
+          <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-val" id="statOrders">0</div><div class="stat-label">Total Orders</div></div>
+          <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-val" id="statRevenue">₹0</div><div class="stat-label">Total Revenue</div></div>
+        </div>
+        <div class="admin-form-card">
+          <h3>📋 Recent Orders</h3>
+          <div id="recentOrders"></div>
+        </div>
+      </div>
+
+      <!-- Menu Section -->
+      <div class="admin-section" id="admin-menu">
+        <div class="admin-header">
+          <h2>Menu Management</h2>
+          <p>Add, edit or remove items from the menu</p>
+        </div>
+        <div class="admin-form-card">
+          <h3>➕ Add New Item</h3>
+          <div class="form-row">
+            <div class="form-group" style="margin:0;"><label>Item Name</label><input type="text" id="newItemName" placeholder="e.g. Red Velvet Cake"/></div>
+            <div class="form-group" style="margin:0;"><label>Price (₹)</label><input type="number" id="newItemPrice" placeholder="e.g. 450"/></div>
+            <div class="form-group" style="margin:0;"><label>Category</label>
+              <select id="newItemCat">
+                <option>Cake</option><option>Bread</option>
+                <option>Pastry</option><option>Cookie</option><option>Other</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin:0;"><label>&nbsp;</label><button class="btn-primary" style="width:100%;padding:11px 14px;" onclick="addItem()">Add</button></div>
+          </div>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr><th>#</th><th>Name</th><th>Category</th><th>Price</th><th>Actions</th></tr></thead>
+            <tbody id="menuAdminTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Orders Section -->
+      <div class="admin-section" id="admin-orders">
+        <div class="admin-header">
+          <h2>All Orders</h2>
+          <p>View and manage customer orders</p>
+        </div>
+        <div style="margin-bottom:14px;text-align:right;">
+          <button class="btn-del" onclick="clearAllOrders()">🗑️ Clear All Orders</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr><th>Order ID</th><th>Customer</th><th>Phone</th><th>Total</th><th>Date</th><th>Items</th><th>Delete</th></tr></thead>
+            <tbody id="ordersAdminTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<script>
+/* ==================== STATE ==================== */
+const ADMIN_USER = 'dinesh';
+const ADMIN_PASS = '1729';
+const WA_NUMBER  = '919345997475';
+
+let cart = JSON.parse(localStorage.getItem('bakery_cart') || '[]');
+let menuItems = JSON.parse(localStorage.getItem('bakery_menu') || 'null');
+let orders = JSON.parse(localStorage.getItem('bakery_orders') || '[]');
+let currentOrder = null;
+let editingId = null;
+
+const CATEGORY_EMOJI = { Cake:'🎂', Bread:'🍞', Pastry:'🥐', Cookie:'🍪', Other:'🧁' };
+
+/* Default menu if first visit */
+if (!menuItems) {
+  menuItems = [
+    { id: uid(), name:'Chocolate Truffle Cake', price:550, category:'Cake' },
+    { id: uid(), name:'Red Velvet Cake',         price:480, category:'Cake' },
+    { id: uid(), name:'Butter Croissant',         price:60,  category:'Pastry' },
+    { id: uid(), name:'Almond Biscotti',          price:80,  category:'Cookie' },
+    { id: uid(), name:'Sourdough Bread',          price:180, category:'Bread' },
+    { id: uid(), name:'Pineapple Pastry',         price:55,  category:'Pastry' },
+    { id: uid(), name:'Choco Chip Cookie',        price:40,  category:'Cookie' },
+    { id: uid(), name:'Garlic Bread',             price:120, category:'Bread' },
+    { id: uid(), name:'Black Forest Cake',        price:520, category:'Cake' },
+    { id: uid(), name:'Muffin',                   price:70,  category:'Other' },
+  ];
+  saveMenu();
+}
+
+function uid() { return Math.random().toString(36).substr(2,9); }
+function saveMenu()   { localStorage.setItem('bakery_menu', JSON.stringify(menuItems)); }
+function saveCart()   { localStorage.setItem('bakery_cart', JSON.stringify(cart)); updateCartCount(); }
+function saveOrders() { localStorage.setItem('bakery_orders', JSON.stringify(orders)); }
+
+/* ==================== PAGE ROUTING ==================== */
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name)?.classList.add('active');
+
+  const hideNav = ['admin-login','admin'].includes(name);
+  document.getElementById('mainNav').style.display = hideNav ? 'none' : 'flex';
+
+  if (name === 'menu')     renderMenu();
+  if (name === 'cart')     renderCart();
+  if (name === 'checkout') renderCheckout();
+  if (name === 'admin')    renderAdmin();
+}
+
+function toggleHamburger() {
+  document.getElementById('navLinks').classList.toggle('open');
+}
+function closeNav() {
+  document.getElementById('navLinks').classList.remove('open');
+}
+
+/* ==================== CART ==================== */
+function updateCartCount() {
+  const total = cart.reduce((s,i)=>s+i.qty, 0);
+  document.getElementById('cartCount').textContent = total;
+}
+
+function addToCart(id) {
+  const item = menuItems.find(i=>i.id===id);
+  if (!item) return;
+  const existing = cart.find(i=>i.id===id);
+  if (existing) existing.qty++;
+  else cart.push({ ...item, qty:1 });
+  saveCart();
+  toast(`${item.name} added to cart 🛒`);
+}
+
+function changeQty(id, delta) {
+  const existing = cart.find(i=>i.id===id);
+  if (!existing) return;
+  existing.qty += delta;
+  if (existing.qty <= 0) cart = cart.filter(i=>i.id!==id);
+  saveCart();
+  renderCart();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(i=>i.id!==id);
+  saveCart();
+  renderCart();
+}
+
+function cartTotal() { return cart.reduce((s,i)=>s+(i.price*i.qty),0); }
+
+/* ==================== MENU RENDER ==================== */
+function renderMenu(filter='All') {
+  const cats = ['All', ...new Set(menuItems.map(i=>i.category))];
+  const cf = document.getElementById('menuCatFilter');
+  cf.innerHTML = cats.map(c=>`<button class="cat-btn ${c===filter?'active':''}" onclick="renderMenu('${c}')">${c==='All'?'🌟 All':CATEGORY_EMOJI[c]||'🍰'} ${c}</button>`).join('');
+
+  const items = filter==='All' ? menuItems : menuItems.filter(i=>i.category===filter);
+  const grid = document.getElementById('menuGrid');
+  if (items.length===0) {
+    grid.innerHTML = `<div class="no-items"><div class="ni-icon">🍽️</div><p>No items in this category yet.</p></div>`;
+    return;
+  }
+  grid.innerHTML = items.map(item=>`
+    <div class="menu-card">
+      <div class="card-img">${CATEGORY_EMOJI[item.category]||'🍰'}</div>
+      <div class="card-body">
+        <div class="card-category">${item.category}</div>
+        <div class="card-name">${escHtml(item.name)}</div>
+        <div class="card-price">₹${item.price}</div>
+        <button class="add-btn" onclick="addToCart('${item.id}')">Add to Cart +</button>
+      </div>
+    </div>`).join('');
+}
+
+/* ==================== CART RENDER ==================== */
+function renderCart() {
+  const el = document.getElementById('cartContent');
+  if (cart.length===0) {
+    el.innerHTML = `<div class="empty-cart"><div class="icon">🛒</div><p style="font-family:var(--font-display);font-size:1.4rem;margin-bottom:8px;">Your cart is empty</p><p style="color:var(--brown-lt);margin-bottom:24px;">Add some delicious items from our menu!</p><button class="btn-primary" onclick="showPage('menu')">Browse Menu</button></div>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="cart-container">
+      <div>
+        <table class="cart-table">
+          <thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Subtotal</th><th></th></tr></thead>
+          <tbody>
+            ${cart.map(i=>`
+              <tr>
+                <td>${CATEGORY_EMOJI[i.category]||'🍰'} ${escHtml(i.name)}</td>
+                <td>₹${i.price}</td>
+                <td>
+                  <div class="qty-control">
+                    <button class="qty-btn" onclick="changeQty('${i.id}',-1)">−</button>
+                    <span class="qty-val">${i.qty}</span>
+                    <button class="qty-btn" onclick="changeQty('${i.id}',1)">+</button>
+                  </div>
+                </td>
+                <td><strong>₹${i.price*i.qty}</strong></td>
+                <td><button class="remove-btn" onclick="removeFromCart('${i.id}')">🗑️</button></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+        <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="showPage('menu')">← Continue Shopping</button>
+          <button class="btn-primary" onclick="showPage('checkout')">Proceed to Checkout →</button>
+        </div>
+      </div>
+      <div>
+        <div class="summary-card">
+          <h3>Order Summary</h3>
+          ${cart.map(i=>`<div class="order-item-row"><span>${escHtml(i.name)} ×${i.qty}</span><span>₹${i.price*i.qty}</span></div>`).join('')}
+          <hr class="divider"/>
+          <div class="summary-row total"><span>Total</span><span>₹${cartTotal()}</span></div>
+          <button class="btn-primary w-full" style="margin-top:18px;" onclick="showPage('checkout')">Checkout →</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ==================== CHECKOUT RENDER ==================== */
+function renderCheckout() {
+  if (cart.length===0) { showPage('menu'); return; }
+  const el = document.getElementById('checkoutSummary');
+  el.innerHTML = cart.map(i=>`<div class="order-item-row"><span>${escHtml(i.name)} ×${i.qty}</span><span>₹${i.price*i.qty}</span></div>`).join('');
+  document.getElementById('checkoutTotal').textContent = `₹${cartTotal()}`;
+}
+
+/* ==================== PLACE ORDER ==================== */
+function placeOrder() {
+  const name    = document.getElementById('custName').value.trim();
+  const phone   = document.getElementById('custPhone').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+  const note    = document.getElementById('custNote').value.trim();
+
+  if (!name)    { toast('⚠️ Please enter your name'); return; }
+  if (!phone)   { toast('⚠️ Please enter your phone number'); return; }
+  if (!address) { toast('⚠️ Please enter your address'); return; }
+  if (cart.length===0) { toast('⚠️ Cart is empty'); return; }
+
+  const orderId = 'BK' + Math.floor(10000 + Math.random()*90000);
+  const now = new Date();
+  const dateStr = now.toLocaleString('en-IN', { dateStyle:'medium', timeStyle:'short' });
+
+  currentOrder = {
+    id: orderId,
+    date: dateStr,
+    name, phone, address, note,
+    items: [...cart],
+    total: cartTotal()
+  };
+
+  orders.unshift(currentOrder);
+  saveOrders();
+  cart = [];
+  saveCart();
+  renderBill(currentOrder);
+  showPage('bill');
+}
+
+/* ==================== BILL RENDER ==================== */
+function renderBill(order) {
+  document.getElementById('billMeta').innerHTML = `
+    <div><span>Order ID</span><span><strong>#${order.id}</strong></span></div>
+    <div><span>Date & Time</span><span>${order.date}</span></div>
+    <div><span>Customer</span><span>${escHtml(order.name)}</span></div>
+    <div><span>Phone</span><span>${order.phone}</span></div>
+    <div><span>Address</span><span>${escHtml(order.address)}</span></div>
+    ${order.note ? `<div><span>Note</span><span>${escHtml(order.note)}</span></div>` : ''}`;
+
+  document.getElementById('billItems').innerHTML = order.items.map(i=>`
+    <tr>
+      <td>${escHtml(i.name)}</td>
+      <td>${i.qty}</td>
+      <td>₹${i.price}</td>
+      <td><strong>₹${i.price*i.qty}</strong></td>
+    </tr>`).join('');
+
+  document.getElementById('billTotal').innerHTML = `Total Amount: ₹${order.total}`;
+}
+
+/* ==================== WHATSAPP ==================== */
+function sendWhatsApp() {
+  if (!currentOrder) return;
+  const items = currentOrder.items.map(i=>`  • ${i.name} × ${i.qty} = ₹${i.price*i.qty}`).join('\n');
+  const msg = `🍰 *New Bakery Order*\n` +
+    `Order ID: #${currentOrder.id}\n` +
+    `Date: ${currentOrder.date}\n\n` +
+    `👤 Name: ${currentOrder.name}\n` +
+    `📞 Phone: ${currentOrder.phone}\n` +
+    `📍 Address: ${currentOrder.address}\n` +
+    (currentOrder.note ? `📝 Note: ${currentOrder.note}\n` : '') +
+    `\n🛒 *Items:*\n${items}\n\n` +
+    `💰 *Total: ₹${currentOrder.total}*\n\n` +
+    `Thank you for ordering from Dinesh Bakery! 🙏`;
+
+  const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+function newOrder() {
+  currentOrder = null;
+  document.getElementById('custName').value = '';
+  document.getElementById('custPhone').value = '';
+  document.getElementById('custAddress').value = '';
+  document.getElementById('custNote').value = '';
+  showPage('menu');
+}
+
+/* ==================== ADMIN LOGIN ==================== */
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  const err = document.getElementById('loginErr');
+  if (u===ADMIN_USER && p===ADMIN_PASS) {
+    localStorage.setItem('bakery_admin', '1');
+    err.style.display = 'none';
+    showPage('admin');
+  } else {
+    err.style.display = 'block';
+  }
+}
+
+function adminLogout() {
+  localStorage.removeItem('bakery_admin');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  showPage('home');
+}
+
+function checkAdminAuth() {
+  if (localStorage.getItem('bakery_admin') !== '1') {
+    showPage('admin-login');
+    return false;
+  }
+  return true;
+}
+
+/* ==================== ADMIN TABS ==================== */
+function adminTab(tab, btn) {
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('admin-'+tab)?.classList.add('active');
+  btn.classList.add('active');
+  if (tab==='dash')   renderAdminDash();
+  if (tab==='menu')   renderMenuAdmin();
+  if (tab==='orders') renderOrdersAdmin();
+}
+
+function renderAdmin() {
+  if (!checkAdminAuth()) return;
+  renderAdminDash();
+  renderMenuAdmin();
+  renderOrdersAdmin();
+  // reset tabs
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('admin-dash').classList.add('active');
+  document.querySelector('.sidebar-nav button').classList.add('active');
+}
+
+function renderAdminDash() {
+  document.getElementById('statItems').textContent  = menuItems.length;
+  document.getElementById('statOrders').textContent = orders.length;
+  const rev = orders.reduce((s,o)=>s+o.total, 0);
+  document.getElementById('statRevenue').textContent = `₹${rev}`;
+
+  const recent = orders.slice(0,5);
+  const el = document.getElementById('recentOrders');
+  if (recent.length===0) { el.innerHTML = `<div class="no-items"><div class="ni-icon">📦</div><p>No orders yet.</p></div>`; return; }
+  el.innerHTML = `
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Date</th></tr></thead>
+        <tbody>
+          ${recent.map(o=>`<tr><td>#${o.id}</td><td>${escHtml(o.name)}</td><td>₹${o.total}</td><td>${o.date}</td></tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function renderMenuAdmin() {
+  const tbody = document.getElementById('menuAdminTable');
+  if (menuItems.length===0) {
+    tbody.innerHTML = `<tr><td colspan="5" class="no-items"><div class="ni-icon">🍽️</div><p>No items yet.</p></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = menuItems.map((item,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td>${CATEGORY_EMOJI[item.category]||'🍰'} ${escHtml(item.name)}</td>
+      <td><span class="badge badge-${item.category.toLowerCase()}">${item.category}</span></td>
+      <td><strong>₹${item.price}</strong></td>
+      <td>
+        <button class="btn-edit" onclick="openEdit('${item.id}')">✏️ Edit</button>
+        <button class="btn-del"  onclick="deleteItem('${item.id}')">🗑️ Delete</button>
+      </td>
+    </tr>`).join('');
+}
+
+function renderOrdersAdmin() {
+  const tbody = document.getElementById('ordersAdminTable');
+  if (orders.length===0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="no-items"><div class="ni-icon">📦</div><p>No orders yet.</p></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = orders.map(o=>`
+    <tr>
+      <td><strong>#${o.id}</strong></td>
+      <td>${escHtml(o.name)}</td>
+      <td>${o.phone}</td>
+      <td><strong>₹${o.total}</strong></td>
+      <td>${o.date}</td>
+      <td style="min-width:180px;">
+        <details>
+          <summary style="cursor:pointer;font-size:.8rem;color:var(--gold);">View Items</summary>
+          <div class="order-detail-popup">
+            ${o.items.map(i=>`<div>${escHtml(i.name)} × ${i.qty} = ₹${i.price*i.qty}</div>`).join('')}
+            <div style="margin-top:6px;font-weight:700;">Total: ₹${o.total}</div>
+          </div>
+        </details>
+      </td>
+      <td><button class="btn-del" onclick="deleteOrder('${o.id}')">🗑️</button></td>
+    </tr>`).join('');
+}
+
+/* ==================== MENU CRUD ==================== */
+function addItem() {
+  const name  = document.getElementById('newItemName').value.trim();
+  const price = parseFloat(document.getElementById('newItemPrice').value);
+  const cat   = document.getElementById('newItemCat').value;
+  if (!name)        { toast('⚠️ Enter item name'); return; }
+  if (!price || price<=0) { toast('⚠️ Enter valid price'); return; }
+  menuItems.push({ id:uid(), name, price, category:cat });
+  saveMenu();
+  document.getElementById('newItemName').value  = '';
+  document.getElementById('newItemPrice').value = '';
+  renderMenuAdmin();
+  renderAdminDash();
+  toast(`${name} added to menu ✅`);
+}
+
+function deleteItem(id) {
+  if (!confirm('Delete this item?')) return;
+  menuItems = menuItems.filter(i=>i.id!==id);
+  saveMenu();
+  renderMenuAdmin();
+  renderAdminDash();
+  toast('Item deleted');
+}
+
+function openEdit(id) {
+  const item = menuItems.find(i=>i.id===id);
+  if (!item) return;
+  editingId = id;
+  document.getElementById('editName').value     = item.name;
+  document.getElementById('editPrice').value    = item.price;
+  document.getElementById('editCategory').value = item.category;
+  document.getElementById('editModal').classList.add('open');
+}
+
+function closeEditModal() {
+  editingId = null;
+  document.getElementById('editModal').classList.remove('open');
+}
+
+function saveEdit() {
+  const item = menuItems.find(i=>i.id===editingId);
+  if (!item) return;
+  const name  = document.getElementById('editName').value.trim();
+  const price = parseFloat(document.getElementById('editPrice').value);
+  const cat   = document.getElementById('editCategory').value;
+  if (!name)        { toast('⚠️ Enter item name'); return; }
+  if (!price||price<=0) { toast('⚠️ Enter valid price'); return; }
+  item.name = name; item.price = price; item.category = cat;
+  saveMenu();
+  closeEditModal();
+  renderMenuAdmin();
+  toast('Item updated ✅');
+}
+
+/* ==================== ORDER CRUD ==================== */
+function deleteOrder(id) {
+  if (!confirm('Delete this order?')) return;
+  orders = orders.filter(o=>o.id!==id);
+  saveOrders();
+  renderOrdersAdmin();
+  renderAdminDash();
+  toast('Order deleted');
+}
+
+function clearAllOrders() {
+  if (!confirm('Clear ALL orders? This cannot be undone.')) return;
+  orders = [];
+  saveOrders();
+  renderOrdersAdmin();
+  renderAdminDash();
+  toast('All orders cleared');
+}
+
+/* ==================== HELPERS ==================== */
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2800);
+}
+
+/* ==================== INIT ==================== */
+updateCartCount();
+</script>
+</body>
+</html>
